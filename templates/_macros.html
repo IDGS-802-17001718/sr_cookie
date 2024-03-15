@@ -1,0 +1,22 @@
+<!--
+Here you can add more macros, you don't need to comment this code
+unless you want to or is necessary for the understanding of the code.    
+-->
+
+{%macro datos(name, placeholder, type="text")%}
+
+<p><input name="{{name}}"  placeholder="{{placeholder}}" type="{{type}}"></p>
+
+{%endmacro%}
+
+
+{%macro render_field(field)%}
+<td>{{field.label}}</td>
+<td>{{field(**kwargs)|safe}}</td>
+{%if field.errors%}
+<ul>
+    {%for error in field.errors%}
+    <li style="color: red;">{{error}}</li>     {%endfor%}
+</ul>
+{%endif%}
+{%endmacro%}
