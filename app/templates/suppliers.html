@@ -1,0 +1,109 @@
+{% extends 'layout.html' %}
+{%from "_macros.html" import render_field%}
+{%block content%}
+<div class="container-fluid p-3">
+
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <h1>Proveedores</h1>
+    </div>
+    <div class="col-md-12">
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+        data-bs-target="#supplierModal">
+        Agregar proveedor
+      </button>
+    </div>
+    <div class="col-md-10">
+      <table id="tblSupplier" class="table table-striped responsive nowrap"
+        style="width:100%">
+        <thead>
+          <tr>
+            <th>nombre</th>
+            <th>RFC</th>
+            <th>correo electronico</th>
+            <th>telefono</th>
+            <th>status</th>
+            <th>Modificar</th>
+            <th>Eliminar</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%for supplier in suppliers%}
+          <tr data-id="{{supplier.id}}">
+            <td>{{supplier.nombre}}</td>
+            <td>{{supplier.rfc}}</td>
+            <td>{{supplier.correo}}</td>
+            <td>{{supplier.telefono}}</td>
+            <td>{{"Activo" if supplier.status == 1 else "Inactivo"}}</td>
+            <td><button class="btn btn-primary btn-sm"
+                onclick="editSupplier({{supplier.id}})">Modificar</button></td>
+            <td>
+              <form method="POST" action="{{url_for('suppliers.delete')}}">
+                <input type="hidden" name="csrf_token"
+                  value="{{csrf_token()}}">
+                <input type="hidden" name="id" value="{{supplier.id}}" id="id">
+                <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+            </form>
+            </td>
+          </tr>
+          {%endfor%}
+        </tbody>
+        <tfoot>
+          <tr>
+            <th>nombre</th>
+            <th>RFC</th>
+            <th>correo electronico</th>
+            <th>telefono</th>
+            <th>status</th>
+            <th>Modificar</th>
+            <th>Eliminar</th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+  <br>
+
+  <!-- supplier_modal.html -->
+  <div class="modal fade" id="supplierModal" tabindex="-1" role="dialog"
+    aria-labelledby="supplierModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="supplierModalLabel">Nuevo Proveedor</h5>
+          <button type="button" class="close ml-auto btn btn-danger mx-10"
+            data-dismiss="modal" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" action="{{url_for('suppliers.save')}}" novalidate>
+            <input type="hidden" name="csrf_token"
+              value="{{csrf_token()}}">
+            <input type="hidden" name="id" id="idSupplier" value="0">
+            {{render_field(form.nombre, class="form-control",
+            placeholder="Nombre")}}
+
+            {{render_field(form.rfc, class="form-control", placeholder="RFC")}}
+
+            {{render_field(form.correo, class="form-control",
+            placeholder="Correo")}}
+
+            {{render_field(form.telefono, class="form-control",
+            placeholder="Teléfono")}}
+
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">Guardar</button>
+              <button type="button" class="btn btn-secondary"
+                data-dismiss="modal">Cancelar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../static/js/supplier.js"></script>
+{%endblock%}

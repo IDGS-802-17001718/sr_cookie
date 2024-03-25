@@ -1,31 +1,39 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
+from sqlalchemy.orm import relationship
 import datetime
 
-db=SQLAlchemy()
+db = SQLAlchemy()
+
+class Roles(db.Model):
+    __tablename__ = 'roles'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    rol = Column(String(100))
+    descripcion = Column(String(255))
+    acceso = Column(Boolean, default=True)
+    aniadir = Column(Boolean, default=True)
+    eliminar = Column(Boolean, default=True)
+    modificar = Column(Boolean, default=True)
+
+class Users(db.Model):
+    __tablename__ = 'usuarios'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    usuario = Column(String(100))
+    correo = Column(String(255))
+    contrasenia = Column(String(255))
+    rol_id = Column(Integer, ForeignKey('roles.id'))
+    status = Column(Integer, default=1)
+    fecha_creacion = db.Column(db.DateTime, default=datetime.datetime.now)
+    creado_por = Column(Integer, ForeignKey('usuarios.id'))
+    fecha_modificacion = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
+    modificado_por = Column(Integer, ForeignKey('usuarios.id'))
 
 class Suppliers(db.Model):
-    __tablename__ = 'suppliers'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(100), nullable=False)
-    phone = db.Column(db.String(100), nullable=False)
-    address = db.Column(db.String(100), nullable=False)
-    city = db.Column(db.String(100), nullable=False)
-    state = db.Column(db.String(100), nullable=False)
-    zip = db.Column(db.String(100), nullable=False)
-    status = db.Column(db.Boolean, default=True)
-    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
-    updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
+    __tablename__ = 'proveedores'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    nombre = Column(String(100))
+    rfc = Column(String(100))
+    correo = Column(String(255))
+    telefono = Column(String(20))
+    status = Column(Integer, default=1)
 
-    def __init__(self, name, email, phone, address, city, state, zip, country):
-        self.name = name
-        self.email = email
-        self.phone = phone
-        self.address = address
-        self.city = city
-        self.state = state
-        self.zip = zip
-        self.country = country
-
-    def __repr__(self):
-        return '<Supplier %r>' % self.name

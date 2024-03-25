@@ -5,14 +5,14 @@ unless you want to or is necessary for the understanding of the code.
 
 {%macro datos(name, placeholder, type="text")%}
 
-<p><input name="{{name}}"  placeholder="{{placeholder}}" type="{{type}}"></p>
+<input name="{{name}}"  placeholder="{{placeholder}}" type="{{type}}">
 
 {%endmacro%}
 
 
 {%macro render_field(field)%}
-<td>{{field.label}}</td>
-<td>{{field(**kwargs)|safe}}</td>
+{{field.label}}
+{{field(**kwargs)|safe}}
 {%if field.errors%}
 <ul>
     {%for error in field.errors%}
@@ -20,3 +20,11 @@ unless you want to or is necessary for the understanding of the code.
 </ul>
 {%endif%}
 {%endmacro%}
+
+{% macro render_field_list(field_list) %}
+    {% for field in field_list %}
+        <div class="form-group">
+            {{ render_field(field) }}
+        </div>
+    {% endfor %}
+{% endmacro %}
